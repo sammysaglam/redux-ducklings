@@ -1,0 +1,23 @@
+{
+	"name":"redux-ducklings" ,
+	"version":"1.0.0" ,
+	"main":"index.js" ,
+	"author":"Sammy Saglam" ,
+	"license":"MIT" ,
+	"scripts":{
+		"build-watch":"webpack --progress --watch" ,
+		"build-dev":"webpack --progress" ,
+		"build":"webpack --progress && webpack -p"
+	} ,
+	"devDependencies":{
+		"babel-core":"^6.26.0" ,
+		"babel-loader":"^7.1.2" ,
+		"babel-plugin-transform-object-rest-spread":"^6.26.0" ,
+		"babel-preset-env":"^1.6.0" ,
+		"eslint":"^4.7.0" ,
+		"eslint-plugin-react":"^7.3.0" ,
+		"eslint-sammy-preset":"^1.0.0" ,
+		"uglifyjs-webpack-plugin":"^0.4.6" ,
+		"webpack":"^3.6.0"
+	}
+}
