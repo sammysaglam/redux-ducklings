@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Library Example</title>
+		<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+		<script src="https://unpkg.com/redux@3.7.2/dist/redux.js"></script>
+		<script src="redux-ducklings.js"></script>
+	</head>
+	<body>
+		<script type="text/babel">
+
+			// example redux module
+			const counterReduxDuckling = (() => {
+
+				// actions
+				const ACTIONS = {
+					INCREMENT:'counter/INCREMENT'
+				};
+
+				// reducer
+				const createReducer = ACTIONS => customArgs => (state = 0 , action = {}) => {
+					switch (action.type) {
+						case ACTIONS.INCREMENT:
+							return state + 1;
+						default:
+							return state;
+					}
+				};
+
+				// action creators
+				const actionCreators = ACTIONS => customArgs => {
+					const increment = () => ({
+						type:ACTIONS.INCREMENT
+					});
+
+					return {
+						increment
+					}
+				};
+
+				// duckling
+				return createReduxDuckling(
+					ACTIONS ,
+					createReducer ,
+					actionCreators
+				);
+
+			})();
+
+			// instantiate multiple ducklings
+			const firstCounterRedux = counterReduxDuckling('first-counter');
+			const secondCounterRedux = counterReduxDuckling();
+
+			// get reducers
+			const firstCounterReducer = firstCounterRedux.createReducer() ;
+			const secondCounterReducer = secondCounterRedux.createReducer() ;
+
+			// get actionCreators
+			const firstCounterActionCreators = firstCounterRedux.actionCreators('a-custom-argument');
+			const secondCounterActionCreators = secondCounterRedux.actionCreators();
+
+			// console log ducklings
+			console.log(firstCounterRedux);
+			console.log(secondCounterRedux);
+
+			// redux adapters
+			const combineReducers = Redux.combineReducers;
+			const createStore = Redux.createStore;
+
+			// redux setup
+			const reducers = combineReducers({
+				firstCounter:firstCounterReducer ,
+				secondCounter:secondCounterReducer
+			});
+			const store = createStore(reducers);
+
+			// dispatch some actions for 1st counter
+			store.dispatch(firstCounterActionCreators.increment());
+			store.dispatch(firstCounterActionCreators.increment());
+			store.dispatch(firstCounterActionCreators.increment());
+			store.dispatch(firstCounterActionCreators.increment());
+
+			// dispatch some actions for 2nd counter
+			store.dispatch(secondCounterActionCreators.increment());
+			store.dispatch(secondCounterActionCreators.increment());
+
+			// output state
+			console.log(store.getState());
+			document.write(JSON.stringify(store.getState()));
+
+		</script>
+	</body>
+</html>
