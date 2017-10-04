@@ -6,7 +6,7 @@ This project is a spin-off based on [Redux Ducks](https://github.com/erikras/duc
 # createReduxDuckling(ACTIONS , createReduce , actionCreators)
 
 ```
-const reduxDucklingCreator = (function() {
+const reduxDucklingCreator = (() {
     return createReduxDuckling(
     
         // 1st parameter: your ACTIONS
@@ -24,7 +24,7 @@ const reduxDucklingCreator = (function() {
         // e.g. ACTIONS => yourCustomArgs => ({  increment:() => ({type:ACTIONS.INCREMENT})  })
         actionCreators 
     );
-}());
+})();
 
 const firstComponentReduxDuckling = reduxDucklingCreator('first');
 const secondComponentReduxDuckling = reduxDucklingCreator('second');
