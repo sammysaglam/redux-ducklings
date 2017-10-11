@@ -11,12 +11,12 @@ if ( isProduction ) {
 	}));
 }
 
-module.exports = {
-	entry:'./index.js' ,
+const createWebpackConfig = libraryTarget => ({
+	entry:'./src/create-redux-duckling.js' ,
 	output:{
 		path:path.resolve('./dist') ,
-		filename:'redux-ducklings' + (isProduction ? '.min' : '') + '.js' ,
-		libraryTarget:'var' ,
+		filename:'redux-ducklings' + (libraryTarget === 'commonjs' ? '.cjs' : '') + (isProduction ? '.min' : '') + '.js' ,
+		libraryTarget:libraryTarget ,
 		library:'createReduxDuckling'
 	} ,
 	module:{
@@ -29,4 +29,9 @@ module.exports = {
 		]
 	} ,
 	plugins
-};
+});
+
+module.exports = [
+	createWebpackConfig('commonjs') ,
+	createWebpackConfig('var')
+];

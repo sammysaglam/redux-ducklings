@@ -1,3 +1,3 @@
-import createReduxDuckling from './src/create-redux-duckling.js' ;
+import {createReduxDuckling} from './dist/redux-ducklings.cjs' ;
 
-module.exports = createReduxDuckling;
+export default createReduxDuckling;

@@ -18,4 +18,4 @@ const createReduxDuckling = (actions , createReducer , actionCreators) => namesp
 	};
 };
 
-export default createReduxDuckling;
+module.exports = createReduxDuckling;
