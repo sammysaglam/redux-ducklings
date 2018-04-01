@@ -1,12 +1,17 @@
-Redux Ducklings: Unique Redux Bundles (based on Redux Ducks)
-============================================================
+# Redux Ducklings: Unique Redux Bundles (based on Redux Ducks)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/sammysaglam/redux-ducklings/blob/master/LICENSE)
+[![npm version](https://img.shields.io/npm/v/redux-ducklings.svg?style=flat)](https://www.npmjs.com/package/redux-ducklings)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-This project is a spin-off based on [Redux Ducks](https://github.com/erikras/ducks-modular-redux) by [erikras](https://github.com/erikras), and provides a helper function (createReduxDuckling) to spawn Redux Ducks as unique child instances called **Ducklings**.
+This project is a spin-off based
+on [Redux Ducks](https://github.com/erikras/ducks-modular-redux) by [erikras](https://github.com/erikras), and
+provides a helper function (createReduxDuckling) to spawn Redux Ducks as unique
+child instances called **Ducklings**.
 
-# createReduxDuckling(ACTIONS , createReduce , actionCreators)
+## createReduxDuckling(ACTIONS , createReduce , actionCreators)
 
 ```
-const reduxDucklingCreator = (() {
+const reduxDucklingCreator = (() => {
     return createReduxDuckling(
     
         // 1st parameter: your ACTIONS
@@ -53,22 +58,31 @@ store.dispatch(secondCounterActionCreators.increment());
 
 ```
 
+### Usage Example
+See [dist/example.html](https://github.com/sammysaglam/redux-ducklings/blob/master/dist/example.html) for
+an example of how to create ReduxDucklings. 
+
 # Redux Ducks (the mother of Ducklings)
 
-The proposal behind [Redux Ducks](https://github.com/erikras/ducks-modular-redux), is very simple: to better organise your Redux code by bundling all your Actions, Action Creators and Reducers into a single file per logical module. Though very elegant, by doing this, I found that when I wanted to use my Redux bundle, I could only do so for a single instance of a React component, or add a lot of ugly code to support multiple instances.
+The proposal behind [Redux Ducks](https://github.com/erikras/ducks-modular-redux), is very
+simple: to better modularize your Redux code by bundling all your Actions, Action Creators
+and Reducers into a single file per logical module. Though very elegant, by doing this, I
+found that when I wanted to use my Redux bundle, I could only do so for a single instance
+of a React component, or add a lot of additional code to support multiple instances, which
+makes assumptions that there will be multiple instances when imported into other projects: I
+believe this negatively affects from the *seperation of concerns* principle.
 
-To the rescue Redux Ducklings! Redux Ducklings creates children of [Redux Ducks](https://github.com/erikras/ducks-modular-redux) by appending a unique ID to each Action, so you can safely use clean Redux Ducks and support multiple instances with little modification to your code.
+To the rescue Redux Ducklings! Redux Ducklings creates children
+of [Redux Ducks](https://github.com/erikras/ducks-modular-redux) by appending a unique ID
+to each Action, so you can safely use clean Redux Ducks and support multiple instances with
+little modification to your code.
 
-# Usage Example
-
-See `dist/example.html` for an example of how to create ReduxDucklings.
-
-Redux Ducklings Explained by Example
------------------------
+# Redux Ducklings Explained by Example
 
 Before demonstrating Redux Ducklings, consider the example below:
 
-Using [Redux Ducks](https://github.com/erikras/ducks-modular-redux) (without Ducklings) to handle state for a single TableOfContents component, would look a bit like this:
+Using [Redux Ducks](https://github.com/erikras/ducks-modular-redux) (without Ducklings) to
+handle state for a single TableOfContents component, would look a bit like this:
 
 ```
 import {combineReducers , createStore} from 'redux';
@@ -147,7 +161,10 @@ var component = ReactDOM.render(
 // -----------------------------------------------------------------------
 ```
 
-The above looks good. However, if I want to have multiple TableOfContents components, the following is a way to do it (not my favourite way, i.e. not the Ducklings way):
+The above looks good. However, if I want to have multiple TableOfContents components, it
+gets a bit more difficult, as the two different TableOfContents components' redux bundles
+ACTIONS will clash with eachother (as they will be identical). So, the reducer must be
+modified to manage multiple TableOfContents instances using a `tableOfContentsId`, as follows:
 
 ```
 import {combineReducers , createStore} from 'redux';
@@ -179,7 +196,7 @@ const createReducer = defaultItem => (state = {currentItem:defaultItem} , action
 }
 
 // action Creators
-const itemClick = (tableOfContentsId,newItem) => ({ // changed from: newItem => ({
+const itemClick = (tableOfContentsId,newItem) => ({
 	type:CHANGE_SELECTED_ITEM ,
 	tableOfContentsId , // added
 	newItem
@@ -245,7 +262,8 @@ var component = ReactDOM.render(
 // -----------------------------------------------------------------------
 ```
 
-The above is not very nice though (and not maintainable); it could be cleaned up, but doesn't provide a very flexible model to use your Redux Ducks.
+The above is not very nice though, since it breaks the modularity by being built
+for multiple instances of a component (as well requires code modification).
 
 Instead, see below code, which uses createReduxDuckling:
 
@@ -254,13 +272,13 @@ import {combineReducers , createStore} from 'redux';
 import {Provider , connect} from 'react-redux';
 import TableOfContents from './components/TableOfContents';
 
-import createReduxDuckling from 'redux-duckling';
+import createReduxDuckling from 'redux-ducklings';
 
 // -----------------------------------------------------------------------
-// ----------------------------- REDUX DUCKS -----------------------------
+// --------------------------- REDUX DUCKLINGS ---------------------------
 // -----------------------------------------------------------------------
 
-const TableOfContentsDuckling = (function() {
+const TableOfContentsDuckling = (() => {
     
     // actions
     const ACTIONS = {
@@ -301,7 +319,7 @@ const TableOfContentsDuckling = (function() {
         actionCreators
     );
 
-}());
+})();
 
 // -----------------------------------------------------------------------
 // -----------------------------------------------------------------------
@@ -314,8 +332,8 @@ const TableOfContentsDuckling = (function() {
 // -----------------------------------------------------------------------
 
 // instantiate multiple ducklings
-const firstReduxDuckling = counterReduxDuckling('1st');
-const secondReduxDuckling = counterReduxDuckling(); // no argument will generate a random ID
+const firstReduxDuckling = tableOfContentsReduxDuckling('1st');
+const secondReduxDuckling = tableOfContentsReduxDuckling(); // no argument will generate a random ID
 
 // get actionCreators
 const firstActionCreators = firstReduxDuckling.actionCreators();
